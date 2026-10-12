@@ -1,0 +1,296 @@
+/* Rama prezentacji w stylu Python Summit 2026 (szablon PYS26 organizatora):
+   brąz #321207, pomarańcz #FE5C26, biały slajd treści, stopka „numer · sekcja”.
+   Wykresy zostają w systemie raportu (tokeny wstrzykuje build.py z theme.py) —
+   --accent to akcent raportu (Polska), --brand to akcent ramy slajdów.
+   Scena 1920×1080 skalowana do okna. */
+:root {
+  --stage-w: 1920px;
+  --stage-h: 1080px;
+  --brand: #FE5C26;        /* pomarańcz Python Summit */
+  --brand-ink: #321207;    /* brąz: tekst na bieli, tło slajdów ciemnych */
+  --brand-deep: #1E0D06;   /* panele na brązie, bloki kodu */
+  --brand-soft: #C9AFA2;   /* tekst drugorzędny na brązie */
+  --slide-bg: #FFFFFF;
+  --card: #FBF7F4;         /* karty na białym slajdzie */
+  /* ciepłe odpowiedniki tokenów raportu — tylko dla ramy, wykresy mają własne kolory */
+  --primary: var(--brand-ink);
+  --secondary: #6A4E43;
+  --muted: #9A8279;
+  --rule: #EDE2DB;
+  --rule-strong: #D3C2B8;
+  --coal: var(--brand-ink);
+  --code-bg: var(--brand-deep);
+  --head-font: "Inter", system-ui, sans-serif;  /* "Source Serif 4" = poprzedni wygląd */
+  --pad-x: 121px;          /* lewa krawędź treści z szablonu PYS26 */
+  --pad-top: 96px;
+  --ease: cubic-bezier(.2, .7, .1, 1);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--coal);
+  color: var(--brand-ink);
+  font-family: "Inter", system-ui, sans-serif;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ------------------------------------------------------------ scena */
+.viewport { position: fixed; inset: 0; overflow: hidden; }
+.stage {
+  position: absolute; left: 50%; top: 50%;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  transform-origin: center center;
+  flex: none;
+}
+.slide {
+  position: absolute; inset: 0;
+  background: var(--slide-bg);
+  padding: var(--pad-top) var(--pad-x) 120px;
+  display: flex; flex-direction: column;
+  visibility: hidden; opacity: 0;
+  transition: opacity .45s var(--ease), visibility 0s linear .45s;
+  overflow: hidden;
+}
+.slide.active { visibility: visible; opacity: 1; transition: opacity .45s var(--ease); z-index: 2; }
+.slide.dark { background: var(--brand-ink); color: #FFFFFF; }
+.slide.dark .muted { color: var(--brand-soft); }
+
+/* ------------------------------------------------------------ chrome (stopka jak w szablonie PYS26) */
+.chrome {
+  position: absolute; left: 0; right: var(--pad-x); bottom: 44px;
+  display: flex; align-items: baseline;
+  font-size: 22px; color: var(--brand-ink); z-index: 5; pointer-events: none;
+}
+.chrome .num { width: var(--pad-x); padding-left: 44px; font-variant-numeric: tabular-nums; }
+.stage.on-dark .chrome { color: var(--brand); }
+.stage.on-brand .chrome { display: none; }
+.progress { position: absolute; left: 0; bottom: 0; height: 4px; background: var(--brand); z-index: 6;
+  transition: width .5s var(--ease); }
+
+/* ------------------------------------------------------------ typografia */
+.kicker { font-size: 20px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--brand); }
+h1, h2, h3 { font-family: var(--head-font); font-weight: 600; margin: 0; text-wrap: balance; letter-spacing: -.025em; }
+h1 { font-size: 112px; line-height: 1.0; }
+h2 { font-size: 68px; line-height: 1.08; margin-top: 14px; }
+h3 { font-size: 40px; line-height: 1.15; }
+p, li { font-size: 32px; line-height: 1.45; }
+.lead { font-size: 36px; line-height: 1.4; color: var(--brand-ink); opacity: .8; max-width: 1300px; margin: 22px 0 0; }
+.dark .lead { color: #FFFFFF; opacity: .85; }
+.muted { color: var(--muted); }
+.small { font-size: 22px; line-height: 1.45; }
+.mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+strong { font-weight: 600; }
+.accent { color: var(--brand); }
+
+/* ------------------------------------------------------------ układy */
+.body { flex: 1; display: flex; flex-direction: column; min-height: 0; margin-top: 40px; }
+.cols { display: grid; gap: 64px; flex: 1; min-height: 0; align-items: start; }
+.cols.c2 { grid-template-columns: 1fr 1fr; }
+.cols.c-wide-left { grid-template-columns: 1.55fr 1fr; }
+.cols.c-wide-right { grid-template-columns: 1fr 1.25fr; }
+.cols > * { min-width: 0; }
+.center { margin: auto 0; }
+
+/* ------------------------------------------------------------ wykresy (inline SVG z pyDreamplet) */
+.chart svg { max-width: 100%; height: auto; display: block; overflow: visible; }
+.dark .chart text { fill: var(--brand-soft); }
+.chart-cap { font-size: 22px; color: var(--secondary); margin: 0 0 18px; }
+.chart-cap b { color: var(--brand-ink); font-weight: 600; font-size: 26px; display: block; margin-bottom: 4px; }
+
+/* ------------------------------------------------------------ kroki (fragmenty) */
+.step { opacity: 0; transform: translateY(14px); transition: opacity .5s var(--ease), transform .5s var(--ease); }
+.step.on { opacity: 1; transform: none; }
+.step-only { display: none; }
+.step-only.on { display: block; animation: fadeUp .5s var(--ease); }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+/* ------------------------------------------------------------ kod */
+pre.code {
+  margin: 0; background: var(--code-bg); color: #F1E7E1; border-radius: 16px;
+  padding: 30px 34px; font: 400 23px/1.55 "IBM Plex Mono", ui-monospace, monospace;
+  overflow: hidden; white-space: pre; tab-size: 4;
+}
+pre.code.sm { font-size: 19px; padding: 24px 28px; }
+pre.code .k { color: #E29BBB; }        /* słowa kluczowe */
+pre.code .s { color: #7FCDBF; }        /* napisy */
+pre.code .c { color: #8C857D; font-style: italic; }
+pre.code .n { color: #F0B640; }        /* liczby */
+pre.code .f { color: #FFFFFF; font-weight: 500; }
+pre.code .b { color: #9FBDF0; }        /* wbudowane: str, max, len */
+pre.code .v { color: #F0B640; }        /* zmienne w treści Typst: #YC */
+pre.code .h { background: rgba(254, 92, 38, .3); border-radius: 3px; box-shadow: 0 0 0 3px rgba(254,92,38,.3); }
+.code-label { font: 500 18px "IBM Plex Mono", monospace; color: var(--muted); margin: 0 0 10px; }
+
+/* ------------------------------------------------------------ elementy */
+/* slajd „6 grzechów”: lista po lewej, przed/po po prawej */
+.sins-layout { display: grid; grid-template-columns: 560px minmax(0, 1fr); gap: 48px; flex: 1; min-height: 0; }
+.sins-list { display: grid; grid-template-rows: repeat(6, 1fr); gap: 10px; min-height: 0; }
+.sin { display: grid; grid-template-columns: 44px 1fr; align-items: start; background: var(--card);
+  border: 1px solid var(--rule); border-radius: 12px; padding: 12px 18px; }
+.sin.step.on:not(.current) { opacity: .45; }
+.sin.current { border-color: var(--brand); box-shadow: 0 0 0 1px var(--brand); background: #FFFFFF; }
+.sin .no { font-family: var(--head-font); font-size: 28px; font-weight: 600; color: var(--brand); line-height: 1.15; }
+.sin h3 { font-family: "Inter", sans-serif; font-size: 25px; font-weight: 600; margin: 0; letter-spacing: 0; line-height: 1.3; }
+.sin .fix { margin-top: 3px; font-size: 21px; line-height: 1.3; color: var(--secondary); }
+.sin .fix::before { content: "→ "; color: var(--brand); font-weight: 600; }
+
+.panes { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; min-height: 0; }
+.pane { display: flex; flex-direction: column; min-height: 0; }
+.pane-label { font-size: 20px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; margin: 0 0 12px; }
+.pane-label span { font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--muted); margin-left: 10px; }
+.pane.bad .pane-label { color: var(--secondary); }
+.pane.good .pane-label { color: var(--brand); }
+.pane-body { flex: 1; min-height: 0; border-radius: 14px; border: 1px solid var(--rule); background: #FFFFFF;
+  padding: 22px; }
+.pane-body.on { display: flex; align-items: center; justify-content: center; }
+.pane.good .pane-body { border-color: var(--brand); }
+.pane-body .crop { width: 100%; height: 100%; display: block; }
+.pane-wait.on { border-style: dashed; border-color: var(--rule-strong) !important; color: var(--rule-strong);
+  font-size: 96px; font-weight: 600; background: var(--card); }
+.demo-title { font-family: "Inter", sans-serif; padding: 0 8px; }
+.demo-title b { display: block; font-size: 30px; line-height: 1.25; font-weight: 600; color: #1B1F24; }
+.demo-title span { display: block; font-size: 21px; color: #55595F; margin-top: 10px; }
+.pane-full.on { flex-direction: column; align-items: stretch; justify-content: center; gap: 18px; }
+.pane-full .crop { height: auto; }
+.demo-title.sm { padding: 0; }
+.demo-title.sm b { font-size: 22px; }
+.demo-title.sm span { font-size: 16px; margin-top: 6px; }
+.demo-text { font-size: 26px; line-height: 1.45; padding: 0 8px; }
+.demo-text mark { background: #FFE58A; padding: 0 4px; }
+.demo-text b { font-weight: 600; color: var(--brand); }
+.demo-text code { display: block; font: 500 22px "IBM Plex Mono", monospace; background: var(--code-bg); color: #F0B640;
+  padding: 12px 16px; border-radius: 8px; }
+.demo-text .demo-arrow { display: block; color: var(--brand); font-size: 30px; line-height: 1.4; padding-left: 16px; }
+.demo-text small { display: block; font-size: 19px; color: var(--muted); margin-top: 14px; }
+
+.chart-src { font-size: 18px; color: var(--muted); margin: 14px 0 0; }
+
+/* slajd „Dane jako kontrakt”: trzy karty przepływu */
+.flow { display: grid; grid-template-columns: 0.95fr auto 1fr auto 1.2fr; gap: 22px; align-items: stretch; margin-top: 8px; }
+.flow-card { background: var(--card); border: 1px solid var(--rule); border-radius: 16px; padding: 28px 30px;
+  display: flex; flex-direction: column; min-width: 0; }
+.flow-arrow { align-self: center; font-size: 48px; color: var(--brand); font-weight: 600; }
+.flow-head { font-size: 32px; font-weight: 600; margin: 0; display: flex; align-items: center; gap: 14px; }
+.flow-head .muted { font-weight: 500; }
+.badge { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  background: var(--brand); color: #FFFFFF; font-size: 22px; font-weight: 600; flex: none; }
+.flow-sub { font-size: 21px; line-height: 1.4; color: var(--secondary); margin: 10px 0 22px; }
+.record { margin: 0; font: 400 21px/1.3 "IBM Plex Mono", monospace; display: grid; gap: 0; }
+.record div { display: flex; justify-content: space-between; gap: 18px; padding: 10px 0; border-top: 1px solid var(--rule); }
+.record dt { color: var(--secondary); }
+.record dd { margin: 0; font-weight: 500; }
+.record-more { font-size: 20px; color: var(--muted); margin: 10px 0 0; }
+.ops { list-style: none; counter-reset: o; padding: 0; margin: 0; display: grid; gap: 18px; }
+.ops li { font-size: 24px; line-height: 1.35; display: flex; flex-direction: column; gap: 4px;
+  padding-top: 14px; border-top: 1px solid var(--rule); }
+.ops li .mono { font-size: 21px; font-weight: 500; color: var(--brand); }
+.flow-card pre.code { flex: 1; font-size: 20px; padding: 22px 24px; }
+.flow-note { font-size: 26px; margin: 34px 0 0; color: var(--brand-ink); }
+
+.stats3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 64px; }
+.stat .key { font: 500 21px "IBM Plex Mono", monospace; color: var(--brand); margin-top: 18px; }
+
+/* slajd „Jeden wykres w pięciu krokach”: wykres + kod bieżącego kroku */
+.mix-cols { grid-template-columns: auto minmax(0, 1fr); gap: 56px; align-items: start; }
+.mix-step h3 { font-size: 36px; }
+.mix-step p.small { margin: 10px 0 16px; }
+.mix-step pre.code { line-height: 1.42; }
+
+.stat { display: flex; flex-direction: column; gap: 4px; }
+.stat .v { font-size: 120px; font-weight: 600; letter-spacing: -.035em; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat .v small { font-size: 44px; font-weight: 500; color: var(--secondary); letter-spacing: 0; margin-left: 6px; }
+.stat .l { font-size: 24px; color: var(--secondary); max-width: 460px; }
+
+.swatches { display: flex; gap: 18px; align-items: flex-end; height: 380px; }
+.sw { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; height: 100%; }
+.sw .bar { border-radius: 6px; height: var(--h); transform-origin: bottom; }
+.sw .name { font-size: 24px; font-weight: 600; }
+.sw .hex { font: 400 17px "IBM Plex Mono", monospace; color: var(--muted); }
+
+.principles { list-style: none; padding: 0; margin: 0; display: grid; gap: 26px; }
+.principles li { display: grid; grid-template-columns: 56px 1fr; font-size: 32px; line-height: 1.35; }
+.principles li > span:first-child { font-family: var(--head-font); font-weight: 600; color: var(--brand); }
+
+.checklist { columns: 2; column-gap: 96px; list-style: none; padding: 0; margin: 10px 0 0; counter-reset: c; }
+.checklist li { break-inside: avoid; counter-increment: c; display: grid; grid-template-columns: 70px 1fr;
+  font-size: 32px; line-height: 1.3; padding: 18px 0; border-top: 1px solid var(--rule); }
+.checklist li::before { content: counter(c, decimal-leading-zero); font: 500 24px "IBM Plex Mono", monospace; color: var(--brand); padding-top: 5px; }
+
+.rules { list-style: none; padding: 0; margin: 26px 0 0; counter-reset: r;
+  display: grid; grid-template-columns: 1fr 1fr; grid-auto-flow: column; grid-template-rows: repeat(5, auto); column-gap: 72px; }
+.rules li { counter-increment: r; display: grid; grid-template-columns: 64px 1fr; grid-template-rows: auto auto;
+  padding: 15px 0 15px; border-top: 1px solid var(--rule); }
+.rules li::before { content: counter(r, decimal-leading-zero); grid-row: 1 / 3; font: 500 24px "IBM Plex Mono", monospace;
+  color: var(--brand); padding-top: 6px; }
+.rules .rule { font-size: 31px; line-height: 1.25; }
+.rules .by { font: 500 19px "IBM Plex Mono", monospace; color: var(--muted); margin-top: 6px; }
+.rules-foot { margin: 30px 0 0; font-size: 26px; color: var(--brand-ink); }
+.rules-foot .mono { background: var(--code-bg); color: #F0B640; padding: 6px 14px; border-radius: 8px; font-size: 22px; }
+
+.frame { background: var(--card); border: 1px solid var(--rule); border-radius: 16px; padding: 26px; }
+.frame img { display: block; width: 100%; height: auto; }
+
+.pages { position: relative; flex: 1; }
+.pages img { position: absolute; top: 0; width: 400px; border-radius: 4px;
+  box-shadow: 0 30px 60px -20px rgba(50, 18, 7, .45), 0 2px 6px rgba(50,18,7,.15); }
+
+.swatch-btns { display: flex; gap: 16px; margin-top: 28px; }
+.swatch-btns button {
+  width: 74px; height: 74px; border-radius: 50%; border: 4px solid var(--slide-bg); cursor: pointer;
+  box-shadow: 0 0 0 2px var(--rule-strong); background: var(--c);
+}
+.swatch-btns button[aria-pressed="true"] { box-shadow: 0 0 0 4px var(--brand-ink); }
+.swatch-btns button:focus-visible { outline: 3px solid var(--brand-ink); outline-offset: 4px; }
+
+.projects { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 36px; flex: 1; min-height: 0; }
+.project {
+  background: var(--card); border: 1px solid var(--rule); border-radius: 16px;
+  padding: 30px 34px 26px; display: flex; flex-direction: column; gap: 18px; min-width: 0;
+}
+.project-logo { height: 84px; width: auto; align-self: flex-start; }
+/* logo Pink Parquet jest szerokie i ciężkie — niższe, żeby obie karty były w równowadze */
+.project-logo.pp-logo { height: 56px; margin: 14px 0; }
+.project-head { display: flex; align-items: center; gap: 16px; height: 84px; }
+.project-icon { width: 62px; height: 62px; }
+.wordmark { font-size: 50px; font-weight: 600; letter-spacing: -.02em; }
+.project-desc { font-size: 24px; line-height: 1.45; color: var(--secondary); margin: 0; }
+.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; flex: 1; min-height: 0; }
+.gallery img { width: 100%; height: 100%; max-height: 300px; object-fit: contain; }
+.shot { width: 100%; height: 300px; object-fit: cover; object-position: top left;
+  border-radius: 6px; border: 1px solid var(--rule); }
+.project-url { font: 500 22px "IBM Plex Mono", monospace; color: var(--brand); margin-top: auto; }
+
+.big-statement { font-family: var(--head-font); font-weight: 600; font-size: 132px; line-height: 1.02; letter-spacing: -.035em; margin: 0; }
+
+/* ------------------------------------------------------------ tytuł i zakończenie (układ szablonu PYS26) */
+.slide.brand { padding: 0; }
+.brand-text { position: absolute; left: var(--pad-x); top: 112px; width: 820px; }
+.brand-text h1 { font-size: 104px; line-height: 1.02; font-weight: 600; }
+.brand-text .desc { font-size: 44px; line-height: 1.3; margin: 28px 0 0; opacity: .9; }
+.brand-text .who { font-size: 52px; font-weight: 500; color: var(--brand); margin: 64px 0 0; letter-spacing: -.01em; }
+.brand-text .role { font-size: 34px; color: var(--brand); margin: 14px 0 0; }
+/* kod QR do repozytorium na slajdzie końcowym, obok linków */
+.brand-text .qr { position: absolute; left: 479px; top: 466px; width: 190px; height: 190px; border-radius: 12px; }
+.brand-text .links-label { display: block; font: 500 20px "Inter", sans-serif; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--brand-soft); margin: 22px 0 4px; }
+.brand-text .links-label:first-child { margin-top: 0; }
+.brand-text .links { font: 500 30px/1.6 "IBM Plex Mono", monospace; color: #FFFFFF; margin: 40px 0 0; }
+.brand-art { position: absolute; top: 0; right: 0; height: 100%; width: auto; }
+.brand-stripes { position: absolute; left: var(--pad-x); width: 820px; bottom: 120px; }
+.brand-stripes svg { width: 100%; height: auto; }
+.brand-foot { position: absolute; left: 0; bottom: 44px; display: flex; align-items: baseline;
+  font-size: 22px; color: var(--brand); }
+.brand-foot .num { width: var(--pad-x); padding-left: 44px; }
+
+.help {
+  position: fixed; right: 18px; top: 16px; z-index: 40; font: 500 13px "Inter", sans-serif; color: var(--brand-soft);
+  background: rgba(30,13,6,.6); padding: 8px 12px; border-radius: 6px; transition: opacity 1s; pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide, .step, .progress { transition: none !important; }
+}

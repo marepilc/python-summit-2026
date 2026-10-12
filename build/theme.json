@@ -1,0 +1,60 @@
+{
+  "ink": {
+    "paper": "#F7F5F0",
+    "surface": "#FFFFFF",
+    "primary": "#1B1F24",
+    "secondary": "#55595F",
+    "muted": "#8A8D91",
+    "rule": "#DDD8CF",
+    "rule_strong": "#BDB6AA",
+    "accent": "#C8102E"
+  },
+  "sources": {
+    "wegiel": "#5F5750",
+    "gaz": "#B5658A",
+    "inne": "#B9B2A8",
+    "biomasa": "#6E9B37",
+    "woda": "#4462B5",
+    "wiatr": "#1F9E8E",
+    "slonce": "#E8A317"
+  },
+  "source_order": [
+    "wegiel",
+    "gaz",
+    "inne",
+    "biomasa",
+    "woda",
+    "wiatr",
+    "slonce"
+  ],
+  "source_labels": {
+    "wegiel": "Węgiel",
+    "gaz": "Gaz",
+    "inne": "Ropa i inne",
+    "biomasa": "Biomasa",
+    "woda": "Woda",
+    "wiatr": "Wiatr",
+    "slonce": "Słońce"
+  },
+  "type": {
+    "sans": "Inter",
+    "serif": "Source Serif 4",
+    "mono": "IBM Plex Mono",
+    "tick": 6.5,
+    "label": 7.5,
+    "body": 9.5,
+    "lead": 12.0,
+    "h2": 20.0,
+    "h1": 34.0,
+    "hero": 64.0
+  },
+  "layout": {
+    "page_w_mm": 210,
+    "page_h_mm": 297,
+    "margin_x_mm": 18,
+    "margin_top_mm": 20,
+    "margin_bottom_mm": 22,
+    "gutter_pt": 14,
+    "text_width_pt": 493.2283464566929
+  }
+}

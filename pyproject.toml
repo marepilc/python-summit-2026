@@ -1,0 +1,28 @@
+[project]
+name = "python-summit-2026"
+version = "0.1.0"
+description = "Python Summit 2026 — Perfekcyjne wizualizacje w Pythonie: raport PDF z Pythona (Polars, pyDreamplet, Typst)"
+authors = [{ name = "Marek Pilczuk" }]
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "polars>=1.20",
+    "pydreamplet>=2.2",
+    "typst>=0.13",
+    "pygments>=2.18",  # podświetlanie kodu na slajdach (lexer Typst od 2.18)
+]
+
+[dependency-groups]
+dev = ["ruff>=0.6"]
+demo = ["matplotlib>=3.9"]  # tylko do slajdu „przed” (scripts/00_przed.py)
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+# 80 znaków: kod z repo trafia na slajdy bez zawijania linii
+line-length = 80
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]

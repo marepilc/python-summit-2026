@@ -1,0 +1,474 @@
+<!--
+  Treść prezentacji. Znaczniki {{...}} wypełnia prezentacja/build.py:
+    {{chart:mix}}            wykres SVG z build/charts (inline, animowany)
+    {{code:measure|py}}      fragment prawdziwego kodu z repo (lista w SNIPPETS)
+    {{num:coal_share_last|1}} liczba z build/data.json w polskim formacie
+    {{raw:...}} / {{var:...}} / {{img:przed.png}}
+  data-steps="N"  liczba kroków na slajdzie;  data-step="k"  element pojawia się w kroku k
+  data-ctrl="..."  kontroler animacji z deck.js
+  id="..."  identyfikator slajdu
+-->
+<div class="viewport">
+<div class="stage">
+
+<!-- ============================================================ 1. TYTUŁ -->
+<!-- układ slajdu 1 z szablonu PYS26: tekst po lewej, grafika organizatora po prawej -->
+<section id="tytul" class="slide dark brand" data-ctrl="stagger">
+  <div class="brand-text">
+    <h1 data-stagger>Perfekcyjne wizualizacje w&nbsp;Pythonie</h1>
+    <p class="desc" data-stagger>raporty bez kompromisów</p>
+    <p class="who" data-stagger>Marek Pilczuk</p>
+    <!-- szablon przewiduje tu „Stanowisko, Firma”: <p class="role" data-stagger>…</p> -->
+  </div>
+  <div class="chart brand-stripes" data-ctrl="stripes">{{chart:stripes}}</div>
+  <img class="brand-art" src="{{asset:pys26_tytul.png}}" alt="Python Summit 2026 — oficjalna prelekcja">
+  <div class="brand-foot"><span class="num">1</span><span>Wydarzenie organizowane przez: Fundacja Academic Partners</span></div>
+</section>
+
+
+<!-- ============================================================ 2. PRZED / PO -->
+<section id="przed-po" class="slide" data-steps="1">
+  <div class="kicker">Te same dane · ten sam Python</div>
+  <h2>Który raport chcielibyście dostać?</h2>
+  <div class="body">
+    <div class="cols c2" style="align-items:stretch">
+      <div class="frame"><img src="{{img:przed.png}}" alt="Wykres z domyślnymi ustawieniami matplotlib"></div>
+      <div class="frame step" data-step="1">
+        <p class="chart-cap"><b>Od {{var:compare_year}} r. udział węgla spadł o {{var:coal_drop_pp}} pkt proc.</b>% rocznej produkcji energii elektrycznej, Polska {{var:first_year}}–{{var:last_year}}</p>
+        <div class="chart">{{chart:mix_small}}</div>
+        <p class="chart-src">Źródło: Our World in Data</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 3. O MNIE -->
+<section id="o-mnie" class="slide" data-ctrl="stagger">
+  <div class="kicker">Kto mówi</div>
+  <h2>Marek Pilczuk</h2>
+  <p class="lead" style="margin-top:14px">Dane, BI i analityka na co dzień. Autor dwóch narzędzi open source:</p>
+  <div class="projects">
+    <article class="project" data-stagger>
+      <img class="project-logo" src="{{asset:pydreamplet_logo.png}}" alt="pyDreamplet">
+      <p class="project-desc">Biblioteka do składania SVG z&nbsp;Pythona: wykresy, mapy, generative art. Z&nbsp;niej są wszystkie wykresy w&nbsp;tej prezentacji.</p>
+      <div class="gallery">
+        <img src="{{asset:pydreamplet_supplier_performance.svg}}" alt="Wykres radialny jakości dostawców">
+        <img src="{{asset:pydreamplet_polar_noise.svg}}" alt="Generatywna grafika z szumu biegunowego">
+        <img src="{{asset:pydreamplet_word_cloud.svg}}" alt="Chmura słów z Alicji w Krainie Czarów">
+      </div>
+      <div class="project-url">py.dreamplet.com</div>
+    </article>
+    <article class="project" data-stagger>
+      <img class="project-logo pp-logo" src="{{asset:pinkparquet_logo.svg}}" alt="Pink Parquet">
+      <p class="project-desc">Szybka przeglądarka plików Parquet z&nbsp;edytorem SQL. Pod spodem Polars, aplikacja w&nbsp;Rust i&nbsp;Tauri na Windows, macOS i&nbsp;Linux.</p>
+      <img class="shot" src="{{asset:pinkparquet_screenshot.jpg}}" alt="Zrzut ekranu Pink Parquet">
+      <div class="project-url">pinkparquet.com</div>
+    </article>
+  </div>
+</section>
+<!-- ============================================================ 4. GRZECHY -->
+<!-- jeden grzech na klik, obok powiększony fragment wykresu „przed” ze slajdu 2;
+     następny klik: naprawa i ten sam fragment wykresu „po”. Wycinki to <use>
+     tych samych źródeł z innym viewBox (build.py: crop, crop_defs). -->
+<section id="grzechy" class="slide" data-steps="12">
+  {{cropdefs:przed.png|mix_small,mix_plain}}
+  <div class="kicker">Diagnoza · ten sam wykres z bliska</div>
+  <h2>6 grzechów typowego raportu</h2>
+  <div class="body">
+    <div class="sins-layout">
+      <div class="sins-list">
+        <div class="sin step" data-step="1" data-current="1 2"><div class="no">1</div><div><h3>Tytuł opisuje osie</h3><div class="fix step" data-step="2">Tytuł podaje informację</div></div></div>
+        <div class="sin step" data-step="3" data-current="3 4"><div class="no">2</div><div><h3>Legenda w rogu</h3><div class="fix step" data-step="4">Etykiety przy danych</div></div></div>
+        <div class="sin step" data-step="5" data-current="5 6"><div class="no">3</div><div><h3>Kolory z palety domyślnej</h3><div class="fix step" data-step="6">Kolor ma znaczenie i stałą kolejność</div></div></div>
+        <div class="sin step" data-step="7" data-current="7 8"><div class="no">4</div><div><h3>Inny font w wykresie i w tekście</h3><div class="fix step" data-step="8">SVG w skali 1:1, jedna typografia</div></div></div>
+        <div class="sin step" data-step="9" data-current="9 10"><div class="no">5</div><div><h3>Liczby przepisane ręcznie</h3><div class="fix step" data-step="10">Tekst czyta dane</div></div></div>
+        <div class="sin step" data-step="11" data-current="11 12"><div class="no">6</div><div><h3>Siatka głośniejsza niż dane</h3><div class="fix step" data-step="12">Włoskowate linie, szczeliny zamiast obrysów</div></div></div>
+      </div>
+      <div class="panes">
+        <div class="pane bad">
+          <p class="pane-label">Przed <span>matplotlib, ustawienia domyślne</span></p>
+          <div class="pane-body step-only" data-only="0">{{crop:przed.png|0 0 800 450}}</div>
+          <div class="pane-body step-only" data-only="1 2">{{crop:przed.png|188 26 444 28}}</div>
+          <div class="pane-body step-only" data-only="3 4">{{crop:przed.png|96 50 200 128}}</div>
+          <div class="pane-body step-only" data-only="5 6">{{crop:przed.png|440 50 260 360}}</div>
+          <div class="pane-body step-only" data-only="7 8">{{crop:przed.png|62 335 248 112}}</div>
+          <div class="pane-body step-only" data-only="9 10"><div class="demo-text">W 2025 r. udział węgla w produkcji prądu spadł do <mark>50%</mark>.<small>liczba przepisana z tabeli — za kwartał będzie nieaktualna</small></div></div>
+          <div class="pane-body step-only" data-only="11 12">{{crop:przed.png|330 60 270 220}}</div>
+        </div>
+        <div class="pane good">
+          <p class="pane-label">Po <span>ten sam CSV, raport</span></p>
+          <div class="pane-body pane-full step-only" data-only="0">
+            <div class="demo-title sm"><b>Od {{var:compare_year}} r. udział węgla spadł o {{var:coal_drop_pp}} pkt proc.</b><span>% rocznej produkcji energii elektrycznej, Polska {{var:first_year}}–{{var:last_year}}</span></div>
+            {{crop:mix_small|0 0 282 196}}</div>
+          <div class="pane-body pane-wait step-only" data-only="1 3 5 7 9 11">?</div>
+          <div class="pane-body step-only" data-only="2"><div class="demo-title"><b>Od {{var:compare_year}} r. udział węgla spadł o {{var:coal_drop_pp}} pkt proc.</b><span>% rocznej produkcji energii elektrycznej, Polska {{var:first_year}}–{{var:last_year}}</span></div></div>
+          <div class="pane-body step-only" data-only="4">{{crop:mix_plain|180 2 102 160}}</div>
+          <div class="pane-body step-only" data-only="6">{{crop:mix_plain|110 2 80 158}}</div>
+          <div class="pane-body step-only" data-only="8">{{crop:mix_plain|0 116 106 60}}</div>
+          <div class="pane-body step-only" data-only="10"><div class="demo-text"><code>#num(k.coal_share_last)%</code><span class="demo-arrow">↓</span>W {{var:last_year}} r. udział węgla w produkcji prądu spadł do <b>{{num:coal_share_last|1}}%</b>.<small>liczba z data.json — przelicza się przy każdym buildzie</small></div></div>
+          <div class="pane-body step-only" data-only="12">{{crop:mix_plain|40 10 140 110}}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============================================================ 5. CEL: RAPORT -->
+<section id="raport" class="slide" data-ctrl="pages">
+  <div class="kicker">Cel na dziś</div>
+  <h2>„Węgiel traci grunt”: 4 strony, jedno polecenie</h2>
+  <div class="body"><div class="pages"><!--PAGES--></div></div>
+</section>
+
+<!-- ============================================================ 6. TEZA -->
+<section id="teza" class="slide dark" data-steps="1">
+  <div class="center">
+    <p class="big-statement">Zasady łatwo spisać.</p>
+    <p class="big-statement step accent" data-step="1" style="margin-top:28px">Lepiej, żeby<br>pilnował ich&nbsp;kod.</p>
+  </div>
+</section>
+
+
+
+<!-- ============================================================ 7. PIPELINE -->
+<!-- data-seq = kolejność pojawiania się (deck.js: ścieżki się rysują, reszta wjeżdża);
+     numery 1–4 to kroki wystąpienia -->
+<section id="pipeline" class="slide" data-ctrl="pipeline">
+  <div class="kicker">Architektura</div>
+  <h2>Od danych do PDF jednym poleceniem</h2>
+  <div class="body" style="justify-content:center">
+    <svg viewBox="0 0 1678 560" style="width:100%;height:auto;overflow:visible" font-family="Inter" role="img" aria-label="Schemat: źródło danych (CSV, Parquet, SQL, API) → Polars lub pandas → ReportData → pyDreamplet → Typst → raport.pdf; theme.py zasila wykresy i skład; data.json przenosi liczby do tekstu">
+      <!-- łączniki -->
+      <g fill="none" stroke="#C9B6AB" stroke-width="3" stroke-linecap="round">
+        <path data-seq="1" d="M190 222 C232 222 228 330 256 330"/>
+        <path data-seq="1" d="M190 294 C226 294 230 330 256 330"/>
+        <path data-seq="1" d="M190 366 C226 366 230 330 256 330"/>
+        <path data-seq="1" d="M190 438 C232 438 228 330 256 330"/>
+        <path data-seq="2" d="M500 330 H556"/>
+        <path data-seq="3" d="M800 330 H866"/>
+        <path data-seq="4" d="M1110 330 H1176"/>
+        <path data-seq="5" d="M1420 330 H1464"/>
+        <path data-seq="4" d="M740 390 V512 H1380 V404" stroke-dasharray="2 9"/>
+        <path data-seq="6" d="M1112 112 C1112 190 1070 190 1070 256"/>
+        <path data-seq="6" d="M1188 112 C1188 190 1380 180 1380 256"/>
+      </g>
+      <g fill="#C9B6AB">
+        <polygon data-seq="1" points="256,321 270,330 256,339"/>
+        <polygon data-seq="2" points="556,321 570,330 556,339"/>
+        <polygon data-seq="3" points="866,321 880,330 866,339"/>
+        <polygon data-seq="4" points="1176,321 1190,330 1176,339"/>
+        <polygon data-seq="5" points="1464,321 1478,330 1464,339"/>
+        <polygon data-seq="4" points="1371,404 1380,390 1389,404"/>
+        <polygon data-seq="6" points="1061,256 1070,270 1079,256"/>
+        <polygon data-seq="6" points="1371,256 1380,270 1389,256"/>
+      </g>
+
+      <!-- źródła: dowolne -->
+      <g data-seq="0" font-size="24" font-weight="600" text-anchor="middle" fill="#321207">
+        <text x="95" y="172" font-size="19" font-weight="600" letter-spacing="2.5" fill="#9A8279">ŹRÓDŁO</text>
+        <rect x="0" y="193" width="190" height="58" rx="29" fill="#FFFFFF" stroke="#D3C2B8" stroke-width="2"/><text x="95" y="230">CSV</text>
+        <rect x="0" y="265" width="190" height="58" rx="29" fill="#FFFFFF" stroke="#D3C2B8" stroke-width="2"/><text x="95" y="302">Parquet</text>
+        <rect x="0" y="337" width="190" height="58" rx="29" fill="#FFFFFF" stroke="#D3C2B8" stroke-width="2"/><text x="95" y="374">SQL</text>
+        <rect x="0" y="409" width="190" height="58" rx="29" fill="#FFFFFF" stroke="#D3C2B8" stroke-width="2"/><text x="95" y="446">API</text>
+      </g>
+
+      <!-- etapy -->
+      <g text-anchor="middle" fill="#321207">
+        <g data-seq="1"><rect x="270" y="270" width="230" height="120" rx="14" fill="#FBF7F4" stroke="#EDE2DB" stroke-width="2"/>
+          <text x="385" y="327" font-size="32" font-weight="600">Polars</text>
+          <text x="385" y="364" font-size="21" fill="#6A4E43">lub pandas</text></g>
+        <g data-seq="2"><rect x="570" y="270" width="230" height="120" rx="14" fill="#321207"/>
+          <text x="685" y="325" font-size="27" font-weight="500" font-family="IBM Plex Mono" fill="#FFFFFF">ReportData</text>
+          <text x="685" y="364" font-size="21" fill="#C9AFA2">listy i słowniki</text></g>
+        <g data-seq="3"><rect x="880" y="270" width="230" height="120" rx="14" fill="#FBF7F4" stroke="#EDE2DB" stroke-width="2"/>
+          <text x="995" y="327" font-size="30" font-weight="600">pyDreamplet</text>
+          <text x="995" y="364" font-size="21" fill="#6A4E43">SVG, 1 jedn. = 1 pt</text></g>
+        <g data-seq="4"><rect x="1190" y="270" width="230" height="120" rx="14" fill="#FBF7F4" stroke="#EDE2DB" stroke-width="2"/>
+          <text x="1305" y="327" font-size="32" font-weight="600">Typst</text>
+          <text x="1305" y="364" font-size="21" fill="#6A4E43">skład stron</text></g>
+        <g data-seq="5"><rect x="1478" y="270" width="200" height="120" rx="14" fill="#FE5C26"/>
+          <text x="1578" y="340" font-size="28" font-weight="600">raport.pdf</text></g>
+      </g>
+
+      <!-- wygląd (theme.py) nad wszystkim -->
+      <g data-seq="6" fill="#321207">
+        <rect x="1040" y="42" width="220" height="70" rx="35" fill="#FFFFFF" stroke="#FE5C26" stroke-width="3"/>
+        <text x="1150" y="86" text-anchor="middle" font-family="IBM Plex Mono" font-size="26" font-weight="500">theme.py</text>
+        <text x="1010" y="72" text-anchor="end" font-size="21" fill="#6A4E43">kolory, fonty, skala</text>
+        <text x="1010" y="100" text-anchor="end" font-size="21" fill="#6A4E43">dla wykresów i składu</text>
+      </g>
+
+      <!-- liczby do tekstu -->
+      <g data-seq="4">
+        <rect x="900" y="490" width="320" height="44" rx="22" fill="#FFFFFF" stroke="#D3C2B8" stroke-width="2"/>
+        <text x="1060" y="519" text-anchor="middle" font-size="20" fill="#6A4E43"><tspan font-family="IBM Plex Mono" font-weight="500" fill="#321207">data.json</tspan> · liczby do tekstu</text>
+      </g>
+
+      <!-- cztery kroki wystąpienia -->
+      <g data-seq="7" font-size="23" font-weight="600" fill="#321207">
+        <path d="M270 238 H800" stroke="#FE5C26" stroke-width="3"/>
+        <path d="M880 238 H1110" stroke="#FE5C26" stroke-width="3"/>
+        <path d="M1190 238 H1420" stroke="#FE5C26" stroke-width="3"/>
+        <circle cx="285" cy="208" r="16" fill="#FE5C26"/><text x="285" y="215" text-anchor="middle" font-size="19" fill="#FFFFFF">2</text><text x="311" y="216">Dane</text>
+        <circle cx="895" cy="208" r="16" fill="#FE5C26"/><text x="895" y="215" text-anchor="middle" font-size="19" fill="#FFFFFF">3</text><text x="921" y="216">Wykresy</text>
+        <circle cx="1205" cy="208" r="16" fill="#FE5C26"/><text x="1205" y="215" text-anchor="middle" font-size="19" fill="#FFFFFF">4</text><text x="1231" y="216">Skład</text>
+        <circle cx="1290" cy="77" r="16" fill="#FE5C26"/><text x="1290" y="84" text-anchor="middle" font-size="19" fill="#FFFFFF">1</text><text x="1316" y="85">Wygląd</text>
+      </g>
+    </svg>
+    <p class="small muted mono" style="margin-top:28px">dane {{var:t_data}} ms · wykresy {{var:t_charts}} ms · PDF {{var:t_pdf}} ms — zmierzone podczas budowania tych slajdów</p>
+  </div>
+</section>
+
+<!-- ============================================================ 8. SEKCJA 1 -->
+<section id="sekcja-design" class="slide dark">
+  <div class="center">
+    <div class="kicker">Krok 1 z 4</div>
+    <h1 style="margin-top:24px">Wygląd</h1>
+    <p class="lead">Kolory, fonty i rozmiary w jednym pliku. Wykresy i strony raportu korzystają z tych samych wartości.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 9. TOKENY -->
+<section id="tokeny" class="slide">
+  <div class="kicker">raport/theme.py</div>
+  <h2>Każdy kolor i rozmiar występuje dokładnie raz</h2>
+  <div class="body">
+    <div class="cols c-wide-left">
+      <pre class="code">{{code:tokens|py}}</pre>
+      <ul class="principles">
+        <li><span>1</span><span><strong>1 jednostka SVG = 1 pt</strong> na stronie. Wykres ma typografię dokumentu.</span></li>
+        <li><span>2</span><span>Eksport do <span class="mono">theme.json</span> — Typst czyta te same wartości.</span></li>
+        <li><span>3</span><span>Skala typograficzna: 6,5 · 7,5 · 9,5 · 12 · 20 · 34 pt. Nic poza nią.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 10. PALETA -->
+<section id="paleta" class="slide" data-ctrl="swatches">
+  <div class="kicker">Kolor ma znaczenie</div>
+  <h2>Węgiel jako szare tło, pozostałe źródła w kolorze</h2>
+  <div class="body">
+    <div class="swatches">
+      <div class="sw"><div class="bar" style="--h:300px;background:#5F5750"></div><div class="name">Węgiel</div><div class="hex">#5F5750</div></div>
+      <div class="sw"><div class="bar" style="--h:150px;background:#B5658A"></div><div class="name">Gaz</div><div class="hex">#B5658A</div></div>
+      <div class="sw"><div class="bar" style="--h:110px;background:#B9B2A8"></div><div class="name">Ropa i inne</div><div class="hex">#B9B2A8</div></div>
+      <div class="sw"><div class="bar" style="--h:130px;background:#6E9B37"></div><div class="name">Biomasa</div><div class="hex">#6E9B37</div></div>
+      <div class="sw"><div class="bar" style="--h:90px;background:#4462B5"></div><div class="name">Woda</div><div class="hex">#4462B5</div></div>
+      <div class="sw"><div class="bar" style="--h:160px;background:#1F9E8E"></div><div class="name">Wiatr</div><div class="hex">#1F9E8E</div></div>
+      <div class="sw"><div class="bar" style="--h:140px;background:#E8A317"></div><div class="name">Słońce</div><div class="hex">#E8A317</div></div>
+      <div class="sw" style="margin-left:40px"><div class="bar" style="--h:220px;background:var(--accent)"></div><div class="name">Akcent</div><div class="hex">tylko Polska</div></div>
+    </div>
+    <p class="small muted" style="margin-top:36px;max-width:1400px">Stała kolejność, kolor idzie za kategorią. Paleta sprawdzona walidatorem pod kątem daltonizmu; węgiel jest celowym wyjątkiem, dlatego zawsze ma etykietę.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 11. SEKCJA 2 -->
+<section id="sekcja-dane" class="slide dark">
+  <div class="center">
+    <div class="kicker">Krok 2 z 4</div>
+    <h1 style="margin-top:24px">Dane</h1>
+    <p class="lead">Polars (lub pandas) liczy. Wykresy i&nbsp;tekst dostają gotowe liczby.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 12. DANE JAKO KONTRAKT -->
+<!-- trzy kroki zamiast ściany kodu: surowe dane → co robi biblioteka → kontrakt.
+     Rekord i podgląd ReportData liczy build.py z prawdziwych danych. -->
+<section id="dane-kontrakt" class="slide" data-steps="3">
+  <div class="kicker">raport/data.py</div>
+  <h2>Wykres nie widzi DataFrame'u</h2>
+  <div class="body">
+    <div class="flow">
+      <div class="flow-card">
+        <p class="flow-head"><span class="badge">1</span>Surowe dane</p>
+        <p class="flow-sub">wiersz z <span class="mono">{{var:data_file}}</span> — równie dobrze Parquet, SQL albo API</p>
+        {{block:raw}}
+      </div>
+      <div class="flow-arrow step" data-step="1">→</div>
+      <div class="flow-card step" data-step="1">
+        <p class="flow-head"><span class="badge">2</span>Polars&nbsp;<span class="muted">lub pandas</span></p>
+        <p class="flow-sub">cztery operacje, cała logika w&nbsp;jednym pliku</p>
+        <ol class="ops">
+          <li><span class="mono">filter</span>tylko Polska, od {{var:first_year}} r.</li>
+          <li><span class="mono">sum_horizontal</span>{{var:n_owid_cols}} kolumn → {{var:n_sources}} źródeł</li>
+          <li><span class="mono">/ total * 100</span>TWh → udział w %</li>
+          <li><span class="mono">to_list() · row(named=True)</span>listy, słowniki i&nbsp;pojedyncze liczby</li>
+        </ol>
+      </div>
+      <div class="flow-arrow step" data-step="2">→</div>
+      <div class="flow-card step" data-step="2">
+        <p class="flow-head"><span class="badge">3</span>ReportData</p>
+        <p class="flow-sub">tylko to widzą wykresy; ten sam obiekt jako <span class="mono">data.json</span> czyta Typst</p>
+        <p class="code-label">build/data.json — fragment</p>
+        <pre class="code sm">{{block:contract}}</pre>
+      </div>
+    </div>
+    <p class="flow-note step" data-step="3">Inne źródło albo pandas zamiast Polars? Zmienia się jeden plik — <span class="mono">raport/data.py</span>. Wykresy i&nbsp;szablon zostają bez zmian.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 13. LICZBY Z DANYCH -->
+<section id="liczby" class="slide" data-ctrl="count">
+  <div class="kicker">build/data.json → Typst</div>
+  <h2>Żadna liczba w raporcie nie jest wpisana ręcznie</h2>
+  <div class="body" style="justify-content:center">
+    <div class="stats3">
+      <div class="stat"><div class="v"><span class="count" data-to="{{raw:coal_share_last}}" data-digits="1">0</span><small>%</small></div><div class="l">prądu z węgla w {{var:last_year}} r.</div><div class="key">kpi["coal_share_last"]</div></div>
+      <div class="stat"><div class="v"><span class="count" data-to="{{raw:intensity_last}}" data-digits="0">0</span><small>g/kWh</small></div><div class="l">emisyjność — najwyższa w UE</div><div class="key">kpi["intensity_last"]</div></div>
+      <div class="stat"><div class="v"><span class="count" data-to="{{raw:solar_growth_since_2019}}" data-digits="0" data-prefix="×">0</span></div><div class="l">wzrost produkcji ze słońca od 2019 r.</div><div class="key">kpi["solar_growth_since_2019"]</div></div>
+    </div>
+    <p class="small muted" style="margin-top:64px">Dane się zmienią — liczby w tekście raportu zmienią się razem z nimi.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 14. SEKCJA 3 -->
+<section id="sekcja-wykresy" class="slide dark">
+  <div class="center">
+    <div class="kicker">Krok 3 z 4</div>
+    <h1 style="margin-top:24px">Wykresy</h1>
+    <p class="lead">pyDreamplet: pełna kontrola nad każdym elementem SVG, tekst mierzony prawdziwymi metrykami fontu.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 15. BUDOWA WYKRESU -->
+<!-- każdy krok: stan wykresu po lewej, kod, który go daje, po prawej
+     (bloki „# krok N” wycinane z raport/charts/mix.py) -->
+<section id="mix-kroki" class="slide" data-steps="5">
+  <div class="kicker">raport/charts/mix.py</div>
+  <h2>Jeden wykres w pięciu krokach</h2>
+  <div class="body">
+    <div class="cols mix-cols">
+      <div class="chart" data-ctrl="mix">{{chart:mix}}</div>
+      <div class="mix-step">
+        <div class="step-only" data-only="0"><h3>0 · Scena</h3><p class="small muted"><span class="mono">Canvas</span> to pomocnik z&nbsp;tego projektu, nie z&nbsp;pyDreamplet. Tworzy <span class="mono">dp.SVG</span> w&nbsp;punktach, z&nbsp;marginesów wylicza obszar wykresu (<span class="mono">c.x0…c.x1</span>, <span class="mono">c.y0…c.y1</span>) i&nbsp;zakłada grupy na warstwy.</p><p class="code-label">raport/charts/mix.py</p><pre class="code sm">{{code:mix0|py|dp.LinearScale(}}</pre><p class="code-label" style="margin-top:18px">raport/charts/base.py — Canvas</p><pre class="code sm">{{code:canvas|py|dp.SVG(}}</pre></div>
+        <div class="step-only" data-only="1"><h3>1 · Warstwy</h3><p class="small muted">Generator obszarów dostaje dolną i górną krawędź każdego źródła.</p><pre class="code sm">{{code:mix1|py|dp.AreaGenerator(}}</pre></div>
+        <div class="step-only" data-only="2"><h3>2 · Szczeliny zamiast obrysów</h3><p class="small muted">Linia w kolorze papieru oddziela warstwy: biel, nie atrament.</p><pre class="code sm">{{code:mix2|py|stroke=T.ink.paper}}</pre></div>
+        <div class="step-only" data-only="3"><h3>3 · Najpierw mierzymy tekst</h3><p class="small muted">Ten blok stoi na początku funkcji: margines wynika z szerokości etykiet, zanim cokolwiek narysujemy.</p><pre class="code sm">{{code:mix3|py|text_width(}}</pre></div>
+        <div class="step-only" data-only="4"><h3>4 · Rozwiązywanie kolizji</h3><p class="small muted">Algorytm rozsuwa etykiety minimalnie. <span class="mono">data-dy</span> zapisuje w SVG, o ile — animacja to odtwarza.</p><pre class="code sm">{{code:mix4|py|place_labels_1d(}}</pre></div>
+        <div class="step-only" data-only="5"><h3>5 · Adnotacje przy danych</h3><p class="small muted">Pionowa linia, rok i&nbsp;krótki opis zdarzenia — bez szukania w&nbsp;tekście obok. Podpisy też są mierzone: gdy się zderzają, jeden przechodzi na drugą stronę swojej linii.</p><pre class="code sm">{{code:mix5|py|_annotation(}}</pre></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ 16. GALERIA A -->
+<section id="galeria-europa" class="slide">
+  <div class="kicker">Wyróżnienie</div>
+  <h2>Wszystko szare. Polska w kolorze.</h2>
+  <div class="body">
+    <div class="cols c2">
+      <div><p class="chart-cap"><b>Udział węgla, {{var:compare_year}} → {{var:last_year}}</b>Kraje UE z udziałem ≥ 10% w {{var:compare_year}} r.</p><div class="chart" data-ctrl="dumbbell">{{chart:dumbbell}}</div></div>
+      <div><p class="chart-cap"><b>Emisyjność prądu, {{var:last_year}}</b>gCO₂/kWh, wszystkie kraje UE-27</p><div class="chart" data-ctrl="ranking">{{chart:ranking}}</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 17. GALERIA B -->
+<section id="galeria-proporcje" class="slide">
+  <div class="kicker">Uczciwe porównania</div>
+  <h2>Wspólna skala i 100 kratek, które zawsze sumują się do 100</h2>
+  <div class="body">
+    <div class="cols" style="grid-template-columns:1.6fr 1fr;align-items:center">
+      <div><p class="chart-cap"><b>Produkcja energii, TWh</b>2000–{{var:last_year}}, ta sama skala w każdym panelu</p><div class="chart" data-ctrl="multiples">{{chart:multiples}}</div></div>
+      <div><p class="chart-cap"><b>Struktura produkcji, {{var:last_year}}</b>1 kratka = 1%</p><div class="chart" data-ctrl="waffle">{{chart:waffle}}</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 18. DLACZEGO PYDREAMPLET -->
+<section id="dlaczego-pydreamplet" class="slide" data-ctrl="stagger">
+  <div class="kicker">Dlaczego pyDreamplet</div>
+  <h2>Niskopoziomowo — i właśnie dlatego</h2>
+  <div class="body">
+    <ul class="principles">
+      <li data-stagger><span>1</span><span>Każdy element SVG jest pod kontrolą. Nie walczymy z ustawieniami domyślnymi.</span></li>
+      <li data-stagger><span>2</span><span>Prawdziwe metryki fontu (HarfBuzz): layout jest liczony, nie zgadywany.</span></li>
+      <li data-stagger><span>3</span><span>Wynik to czysty, edytowalny wektor z klasami i atrybutami — ten sam plik trafia do PDF i do tych animowanych slajdów.</span></li>
+      <li data-stagger><span>4</span><span>Typowany i lekki: zależności to fontTools i uharfbuzz.</span></li>
+    </ul>
+    <p class="small muted" style="margin-top:44px" data-stagger>Do eksploracji danych: matplotlib, Altair. Do raportu, który ma wyglądać jak z redakcji: pyDreamplet.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 19. SEKCJA 4 -->
+<section id="sekcja-typst" class="slide dark">
+  <div class="center">
+    <div class="kicker">Krok 4 z 4</div>
+    <h1 style="margin-top:24px">Skład</h1>
+    <p class="lead">Typst: strony PDF w&nbsp;ułamku sekundy. Każda liczba w&nbsp;tekście pochodzi z&nbsp;danych.</p>
+  </div>
+</section>
+
+<!-- ============================================================ 20. TYPST -->
+<section id="typst" class="slide">
+  <div class="kicker">template/</div>
+  <h2>Komponenty zamiast formatowania ręcznego</h2>
+  <div class="body" style="gap:28px">
+    <div class="cols c2">
+      <div><p class="code-label">components.typ — rama wykresu</p><pre class="code sm">{{code:typst_chart|typ}}</pre></div>
+      <div><p class="code-label">raport.typ — tekst z liczbami z data.json</p><pre class="code sm">{{code:typst_num|typ|#num(coal-drop-pp, d: 0)}}</pre>
+        <p class="small muted" style="margin-top:24px">Polskie formatowanie liczb, tekst warunkowy, tytuł wykresu jako informacja z danych. PDF powstaje w {{var:t_pdf}} ms.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ 21. JEDNA LINIJKA -->
+<section id="jedna-linijka" class="slide" data-steps="4" data-ctrl="accentsteps">
+  <div class="kicker">Jedna linijka</div>
+  <h2>Zmień akcent — zmienia się cały raport</h2>
+  <div class="body">
+    <div class="cols" style="grid-template-columns:0.9fr 1.4fr;align-items:center">
+      <div>
+        <pre class="code">accent: str = <span class="s" data-accent-code>"{{var:accent}}"</span></pre>
+        <div class="swatch-btns" role="group" aria-label="Kolor akcentu">
+          <button type="button" style="--c:#C8102E" data-c="#C8102E" aria-pressed="true" aria-label="Czerwień"></button>
+          <button type="button" style="--c:#1F6FEB" data-c="#1F6FEB" aria-pressed="false" aria-label="Niebieski"></button>
+          <button type="button" style="--c:#7A3EB1" data-c="#7A3EB1" aria-pressed="false" aria-label="Fiolet"></button>
+          <button type="button" style="--c:#0E7C66" data-c="#0E7C66" aria-pressed="false" aria-label="Zieleń"></button>
+        </div>
+        <p class="small muted" style="margin-top:28px">Na scenie: zmiana w <span class="mono">theme.py</span> → <span class="mono">uv run python -m raport.build</span> → odśwież PDF.</p>
+      </div>
+      <div class="chart">{{chart:dumbbell_wide}}</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================================================ 22. CHECKLISTA -->
+<section id="checklista" class="slide" data-ctrl="stagger" data-section="Podsumowanie">
+  <div class="kicker">Na wynos</div>
+  <h2>10 zasad — i&nbsp;kod, który ich pilnuje</h2>
+  <ol class="rules">
+    <li data-stagger><span class="rule">Tytuł podaje informację, nie ocenę.</span><span class="by">chart(title, subtitle, source)</span></li>
+    <li data-stagger><span class="rule">Etykiety przy danych zamiast legendy.</span><span class="by">place_labels_1d()</span></li>
+    <li data-stagger><span class="rule">Kolor ma znaczenie i&nbsp;stałą kolejność.</span><span class="by">theme.py · SOURCE_ORDER</span></li>
+    <li data-stagger><span class="rule">Szarość dla tła, akcent tylko do wyróżnienia.</span><span class="by">ink.accent</span></li>
+    <li data-stagger><span class="rule">Wykres w&nbsp;skali strony: 1&nbsp;jednostka = 1&nbsp;pt.</span><span class="by">Canvas(width, height)</span></li>
+    <li data-stagger><span class="rule">Mierz tekst przed rysowaniem.</span><span class="by">text_width()</span></li>
+    <li data-stagger><span class="rule">Cienkie linie zamiast ramek i&nbsp;obrysów.</span><span class="by">stroke=T.ink.paper</span></li>
+    <li data-stagger><span class="rule">Wspólna skala w&nbsp;porównaniach.</span><span class="by">growth_multiples()</span></li>
+    <li data-stagger><span class="rule">Każda liczba w&nbsp;tekście pochodzi z&nbsp;danych.</span><span class="by">#num(k.…) · data.json</span></li>
+    <li data-stagger><span class="rule">Jedno polecenie od danych do PDF.</span><span class="by">python -m raport.build</span></li>
+  </ol>
+  <p class="rules-foot" data-stagger><span class="mono">uv run python -m raport.build</span>&ensp;→&ensp;wszystkie dziesięć naraz, w&nbsp;{{var:t_total}}&nbsp;s</p>
+</section>
+
+<!-- ============================================================ 23. DZIĘKUJĘ -->
+<!-- układ slajdu 3 z szablonu PYS26 -->
+<section id="pytania" class="slide dark brand" data-ctrl="stagger">
+  <div class="brand-text">
+    <h1 class="accent" data-stagger>Dziękuję!<br>Pytania?</h1>
+    <p class="desc accent" style="font-size:36px" data-stagger>Pamiętaj, aby zostawić swoje pytania i&nbsp;oceń prezentację w&nbsp;poniższej sekcji.</p>
+    <p class="links" data-stagger><span class="links-label">Kod, raport i slajdy</span>github.com/marepilc/python-summit-2026<span class="links-label">pyDreamplet</span>py.dreamplet.com</p>
+    <img class="qr" data-stagger src="{{asset:qr_repo.svg}}" alt="Kod QR: github.com/marepilc/python-summit-2026">
+  </div>
+  <div class="chart brand-stripes" data-ctrl="stripes" style="opacity:.55">{{chart:stripes}}</div>
+  <img class="brand-art" src="{{asset:pys26_koniec.png}}" alt="Python Summit 2026 · Academic Partners">
+  <div class="brand-foot"><span class="num">23</span><span>Wydarzenie organizowane przez: Fundacja Academic Partners</span></div>
+</section>
+
+<div class="chrome"><span class="num">1</span><span class="section">Perfekcyjne wizualizacje w Pythonie</span></div>
+<div class="progress"></div>
+</div>
+</div>
+<!--HELP-->

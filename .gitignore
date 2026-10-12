@@ -1,0 +1,7 @@
+__pycache__/
+.venv/
+# znacznik czasu builda — zmienia się przy każdym uruchomieniu
+build/meta.json
+# pośrednie pliki prezentacji (powstają przy budowaniu)
+build/pages/
+build/charts_slides/
